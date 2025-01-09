@@ -35,6 +35,7 @@ source .venv/bin/activate
 
 ```bash
 pip install -r requirements.txt
+pip install -r requirements-dev.txt
 
 ```
 
@@ -42,9 +43,7 @@ pip install -r requirements.txt
 
 ```bash
     python3 -m pip install -e .
-
     python3 -m pip install -e . --no-deps
-
 ```
 
 <!-- Run Your Application -->
@@ -66,10 +65,12 @@ pip install -r requirements.txt
     pip freeze
 ```
 
-<!--  -->
+<!-- To run test -->
 
 ```bash
-
+    pytest
+    pytest --fixtures
+    pytest --fixtures-per-test
 ```
 
 <!--  -->
