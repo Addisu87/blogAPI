@@ -1,2 +1,2 @@
 # blogapi
-It is a store api using fastAPI
+It is a blog api using fastAPI
