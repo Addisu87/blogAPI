@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "blogapi"
+authors = [
+    {name = "Addisu Haile", email = "addisuhaile87@gmail.com"},
+]
+description = "It is a blog api using fastAPI"
+readme = "README.md"
+requires-python = ">=3.11"
+keywords = ["one", "two"]
+license = "MIT License"
+classifiers = [
+    "Framework :: FastAPI",
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+pytest
+
+[project.scripts]
+my-script = "blogapi.module:function"
