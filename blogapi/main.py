@@ -1,15 +1,24 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 
-from blogapi.routers import post, user
-
-app = FastAPI()
-print("FastAPI app instance created:", app)
+from blogapi.core.database import database
+from blogapi.routers.post import router as post_router
 
 
-app.include_router(user.router)
-app.include_router(post.router)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await database.connect()
+    yield
+    await database.disconnect()
 
 
-@app.get("/")
-async def root():
-    return {"msg": "Hello World!"}
+app = FastAPI(lifespan=lifespan)
+
+
+app.include_router(post_router)
+
+
+# @app.get("/")
+# async def root():
+#     return {"msg": "Hello World!"}
