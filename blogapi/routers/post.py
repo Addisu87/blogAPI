@@ -9,7 +9,7 @@ from blogapi.schemas.post import (
     UserPostWithComments,
 )
 
-router = APIRouter(prefix="/posts", tags=["posts"])
+router = APIRouter(tags=["Posts"])
 
 
 async def find_post(post_id: int):
@@ -26,7 +26,7 @@ async def create_post(post: UserPostIn):
     data = post.model_dump()
     query = post_table.insert().values(data)
     last_record_id = await database.execute(query)
-    return {**data, "id": last_record_id}
+    return {"id": last_record_id, **data}
 
 
 @router.get("/post", response_model=list[UserPost])
@@ -50,7 +50,7 @@ async def create_comment(comment: CommentIn):
     data = comment.model_dump()
     query = comment_table.insert().values(data)
     last_record_id = await database.execute(query)
-    return {**data, "id": last_record_id}
+    return {"id": last_record_id, **data}
 
 
 @router.get("/post/{post_id}/comment", response_model=list[Comment])
