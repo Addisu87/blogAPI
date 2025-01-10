@@ -16,7 +16,11 @@ def find_post(post_id: int):
     return post_table.get(post_id)
 
 
-@router.post("/post", response_model=UserPost, status_code=201)
+@router.post(
+    "/post",
+    response_model=UserPost,
+    status_code=status.HTTP_201_CREATED,
+)
 async def create_post(post: UserPostIn):
     data = post.model_dump()
     last_record_id = len(post_table)
@@ -30,7 +34,11 @@ async def get_all_posts():
     return list(post_table.values())
 
 
-@router.post("/comment", response_model=Comment)
+@router.post(
+    "/comment",
+    response_model=Comment,
+    status_code=status.HTTP_201_CREATED,
+)
 async def create_comment(comment: CommentIn):
     post = find_post(comment.post_id)
     if not post:
