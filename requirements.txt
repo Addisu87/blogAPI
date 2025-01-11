@@ -5,3 +5,6 @@ databases[asyncpg]
 python-dotenv
 pydantic-settings
 psycopg
+rich
+asgi-correlation-id
+python-json-logger
