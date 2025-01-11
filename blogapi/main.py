@@ -23,7 +23,6 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 app.add_middleware(CorrelationIdMiddleware)
 
-
 app.include_router(post_router)
 
 
