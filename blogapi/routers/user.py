@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException, status
 
 from blogapi.core.database import database, user_table
 from blogapi.core.security import get_user
-from blogapi.schemas.user import UserIn
+from blogapi.models.user import UserIn
 
 logger = logging.getLogger(__name__)
 

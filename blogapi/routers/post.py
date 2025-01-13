@@ -3,7 +3,7 @@ import logging
 from fastapi import APIRouter, HTTPException, status
 
 from blogapi.core.database import comment_table, database, post_table
-from blogapi.schemas.post import (
+from blogapi.models.post import (
     Comment,
     CommentIn,
     UserPost,
