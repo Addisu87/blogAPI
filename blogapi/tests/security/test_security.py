@@ -2,7 +2,7 @@ import pytest
 from fastapi import HTTPException
 from jose import jwt
 
-from blogapi.core.deps import authenticate_user, get_user
+from blogapi.core.deps import authenticate_user, get_current_user, get_user
 from blogapi.core.security import (
     ALGORITHM,
     SECRET_KEY,
@@ -62,3 +62,16 @@ async def test_authenticate_user_not_found():
 async def test_authenticate_user_wrong_password(registered_user: dict):
     with pytest.raises(HTTPException):
         await authenticate_user(registered_user["email"], "wrong password")
+
+
+@pytest.mark.anyio
+async def test_get_current_user(registered_user: dict):
+    token = create_access_token(registered_user["email"])
+    user = await get_current_user(token)
+    assert user["email"] == registered_user["email"]
+
+
+@pytest.mark.anyio
+async def test_get_current_user_invalid_token():
+    with pytest.raises(HTTPException):
+        await get_current_user("invalid token")
