@@ -1,33 +1,33 @@
 import databases
 import sqlalchemy
+from sqlalchemy import Column, ForeignKey, Integer, MetaData, String, Table
 
 from blogapi.core.config import config
 
-metadata = sqlalchemy.MetaData()
+metadata = MetaData()
 
-post_table = sqlalchemy.Table(
+post_table = Table(
     "posts",
     metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column("body", sqlalchemy.String),
+    Column("id", Integer, primary_key=True),
+    Column("body", String),
 )
 
-comment_table = sqlalchemy.Table(
+comment_table = Table(
     "comments",
     metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column("body", sqlalchemy.String),
-    sqlalchemy.Column("post_id", sqlalchemy.ForeignKey("posts.id"), nullable=False),
+    Column("id", Integer, primary_key=True),
+    Column("body", String),
+    Column("post_id", ForeignKey("posts.id"), nullable=False),
 )
 
-user_table = sqlalchemy.Table(
+user_table = Table(
     "users",
     metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True, autoincrement=True),
-    sqlalchemy.Column("email", sqlalchemy.String, unique=True, nullable=False),
-    sqlalchemy.Column("password", sqlalchemy.String, nullable=False),
+    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("email", String, unique=True, nullable=False),
+    Column("password", String, nullable=False),
 )
-
 
 engine = sqlalchemy.create_engine(config.DATABASE_URL)
 
