@@ -1,6 +1,12 @@
 import pytest
 
-from blogapi.core.security import get_user
+from blogapi.core.deps import get_user
+from blogapi.core.security import get_password_hash, verify_password
+
+
+def test_get_password_hash():
+    password = "testpassword"
+    assert verify_password(password, get_password_hash(password))
 
 
 @pytest.mark.anyio

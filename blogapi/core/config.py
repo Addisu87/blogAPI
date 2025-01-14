@@ -4,9 +4,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class BaseConfig(BaseSettings):
-    ENV_STATE: str | None = None
-
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+    ENV_STATE: str | None = None
 
 
 class GlobalConfig(BaseConfig):
@@ -24,10 +24,10 @@ class ProdConfig(GlobalConfig):
 
 
 class TestConfig(GlobalConfig):
+    model_config = SettingsConfigDict(env_prefix="TEST_", extra="ignore")
+
     DATABASE_URL: str | None = None
     DB_FORCE_ROLL_BACK: bool = True
-
-    model_config = SettingsConfigDict(env_prefix="TEST_", extra="ignore")
 
 
 # lets to avoid reading the dotenv file again and again for each request
