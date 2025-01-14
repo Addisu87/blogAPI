@@ -55,5 +55,7 @@ async def registered_user(async_client: AsyncClient) -> dict:
         user_table.c.email == user_details["email"],
     )
     user = await database.fetch_one(query)
-    user_details["id"] = user.id
+
+    if user:
+        user_details["id"] = user["id"]
     return user_details

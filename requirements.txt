@@ -4,7 +4,8 @@ SQLAlchemy
 databases[asyncpg]
 python-dotenv
 pydantic-settings
-psycopg
+psycopg2
+alembic
 rich
 asgi-correlation-id
 python-json-logger
