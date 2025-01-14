@@ -2,8 +2,8 @@ import logging
 
 from fastapi import APIRouter, HTTPException, status
 
-from blogapi.core.deps import get_user
-from blogapi.core.security import get_password_hash
+from blogapi.core.deps import authenticate_user, get_user
+from blogapi.core.security import create_access_token, get_password_hash
 from blogapi.database.database import database, user_table
 from blogapi.models.user import UserIn
 
@@ -27,3 +27,15 @@ async def register(user: UserIn):
 
     await database.execute(query)
     return {"detail": "User Created."}
+
+
+@router.post("/token")
+async def login(user: UserIn):
+    authenticated_user = await authenticate_user(user.email, user.password)
+    if not authenticated_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid email or password",
+        )
+    access_token = create_access_token(user.email)
+    return {"access_token": access_token, "token_type": "bearer"}
