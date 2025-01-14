@@ -6,7 +6,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.exception_handlers import http_exception_handler
 
 from blogapi.core.logging_conf import configure_logging
-from blogapi.db.database import database
+from blogapi.database.database import database
 from blogapi.routers.post import router as post_router
 from blogapi.routers.user import router as user_router
 

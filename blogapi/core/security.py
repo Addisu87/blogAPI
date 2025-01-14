@@ -1,6 +1,6 @@
 import logging
 
-from blogapi.db.database import database, user_table
+from blogapi.database.database import database, user_table
 
 logger = logging.getLogger(__name__)
 

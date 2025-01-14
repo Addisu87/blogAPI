@@ -23,15 +23,17 @@ comment_table = sqlalchemy.Table(
 user_table = sqlalchemy.Table(
     "users",
     metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column("email", sqlalchemy.String, unique=True),
-    sqlalchemy.Column("password", sqlalchemy.String),
+    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True, autoincrement=True),
+    sqlalchemy.Column("email", sqlalchemy.String, unique=True, nullable=False),
+    sqlalchemy.Column("password", sqlalchemy.String, nullable=False),
 )
 
 
 engine = sqlalchemy.create_engine(config.DATABASE_URL)
 
+metadata.drop_all(engine)
 metadata.create_all(engine)
+
 database = databases.Database(
     config.DATABASE_URL, force_rollback=config.DB_FORCE_ROLL_BACK
 )

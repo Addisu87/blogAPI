@@ -7,7 +7,7 @@ from httpx import ASGITransport, AsyncClient
 
 os.environ["ENV_STATE"] = "test"
 
-from blogapi.db.database import database, metadata, user_table
+from blogapi.database.database import database, metadata, user_table
 from blogapi.main import app
 
 
