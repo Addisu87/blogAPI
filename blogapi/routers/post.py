@@ -1,7 +1,9 @@
 import logging
+from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
+from blogapi.core.deps import get_current_user
 from blogapi.database.database import comment_table, database, post_table
 from blogapi.models.post import (
     Comment,
@@ -10,6 +12,7 @@ from blogapi.models.post import (
     UserPostIn,
     UserPostWithComments,
 )
+from blogapi.models.user import User
 
 router = APIRouter(tags=["Posts"])
 
@@ -31,7 +34,9 @@ async def find_post(post_id: int):
     response_model=UserPost,
     status_code=status.HTTP_201_CREATED,
 )
-async def create_post(post: UserPostIn):
+async def create_post(
+    post: UserPostIn, current_user: Annotated[User, Depends(get_current_user)]
+):
     logger.info("Create post")
 
     data = post.model_dump()
@@ -59,7 +64,9 @@ async def get_all_posts():
     response_model=Comment,
     status_code=status.HTTP_201_CREATED,
 )
-async def create_comment(comment: CommentIn):
+async def create_comment(
+    comment: CommentIn, current_user: Annotated[User, Depends(get_current_user)]
+):
     logger.info("Create comment")
 
     post = await find_post(comment.post_id)

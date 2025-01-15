@@ -1,9 +1,10 @@
 import logging
+from typing import Annotated
 
-from fastapi import HTTPException, status
+from fastapi import Depends, HTTPException, status
 from jose import ExpiredSignatureError, JWTError, jwt
 
-from blogapi.core.security import ALGORITHM, SECRET_KEY, verify_password
+from blogapi.core.security import ALGORITHM, SECRET_KEY, oauth2_scheme, verify_password
 from blogapi.database.database import database, user_table
 
 logger = logging.getLogger(__name__)
@@ -36,7 +37,7 @@ async def authenticate_user(email: str, password: str):
 
 
 # Decode the token and return the user
-async def get_current_user(token: str):
+async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email = payload.get("sub")

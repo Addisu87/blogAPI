@@ -2,6 +2,7 @@ import logging
 import secrets
 from datetime import datetime, timedelta, timezone
 
+from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
 from passlib.context import CryptContext
 
@@ -14,6 +15,7 @@ ALGORITHM = "HS256"
 # 60 minutes * 24 hours * 7 days = 7 days
 # ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7
 # ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 def access_token_expire_minutes():
