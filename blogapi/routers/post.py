@@ -1,6 +1,7 @@
 import logging
 from typing import Annotated
 
+import sqlalchemy
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from blogapi.core.deps import get_current_user
@@ -19,6 +20,12 @@ from blogapi.models.user import User
 router = APIRouter(tags=["Posts"])
 
 logger = logging.getLogger(__name__)
+
+select_post_and_likes = (
+    sqlalchemy.select(post_table, sqlalchemy.func.count(like_table.c.id).label("likes"))
+    .select_from(post_table.outerjoin(like_table))
+    .group_by(post_table.c.id)
+)
 
 
 async def find_post(post_id: int):
@@ -101,7 +108,11 @@ async def get_comments_on_post(post_id: int):
 async def get_post_with_comments(post_id: int):
     logger.info("Getting post and its comments")
 
-    post = await find_post(post_id)
+    query = select_post_and_likes.where(post_table.c.id == post_id)
+
+    logger.debug(query)
+
+    post = await database.fetch_one(query)
     if not post:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Post not found"
