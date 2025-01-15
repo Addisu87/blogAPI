@@ -6,21 +6,6 @@ from blogapi.core.config import config
 
 metadata = MetaData()
 
-post_table = Table(
-    "posts",
-    metadata,
-    Column("id", Integer, primary_key=True),
-    Column("body", String),
-)
-
-comment_table = Table(
-    "comments",
-    metadata,
-    Column("id", Integer, primary_key=True),
-    Column("body", String),
-    Column("post_id", ForeignKey("posts.id"), nullable=False),
-)
-
 user_table = Table(
     "users",
     metadata,
@@ -28,6 +13,24 @@ user_table = Table(
     Column("email", String, unique=True, nullable=False),
     Column("password", String, nullable=False),
 )
+
+post_table = Table(
+    "posts",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("body", String),
+    Column("user_id", ForeignKey("users.id"), nullable=False),
+)
+
+comment_table = Table(
+    "comments",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("body", String),
+    Column("user_id", ForeignKey("users.id"), nullable=False),
+    Column("post_id", ForeignKey("posts.id"), nullable=False),
+)
+
 
 engine = sqlalchemy.create_engine(config.DATABASE_URL)
 
