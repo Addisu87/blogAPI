@@ -10,7 +10,7 @@ async def create_post(
     response = await async_client.post(
         "/post",
         json={"body": body},
-        headers={"Authorization": f"Bearer{logged_in_token}"},
+        headers={"Authorization": f"Bearer {logged_in_token}"},
     )
     return response.json()
 
@@ -21,7 +21,7 @@ async def create_comment(
     response = await async_client.post(
         "/comment",
         json={"post_id": post_id, "body": body},
-        headers={"Authorization": f"Bearer{logged_in_token}"},
+        headers={"Authorization": f"Bearer {logged_in_token}"},
     )
     return response.json()
 
@@ -47,7 +47,7 @@ async def test_create_post(async_client: AsyncClient, logged_in_token: str):
     response = await async_client.post(
         "/post",
         json={"body": body},
-        headers={"Authorization": f"Bearer{logged_in_token}"},
+        headers={"Authorization": f"Bearer {logged_in_token}"},
     )
 
     assert response.status_code == 201
@@ -75,9 +75,7 @@ async def test_create_post_missing_data(
     async_client: AsyncClient, logged_in_token: str
 ):
     response = await async_client.post(
-        "/post",
-        json={},
-        headers={"Authorization": f"Bearer{logged_in_token}"},
+        "/post", json={}, headers={"Authorization": f"Bearer {logged_in_token}"}
     )
 
     assert response.status_code == 422
@@ -100,7 +98,7 @@ async def test_create_comment(
     response = await async_client.post(
         "/comment",
         json={"post_id": created_post["id"], "body": body},
-        headers={"Authorization": f"Bearer{logged_in_token}"},
+        headers={"Authorization": f"Bearer {logged_in_token}"},
     )
 
     assert response.status_code == 201
