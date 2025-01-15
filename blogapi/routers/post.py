@@ -1,4 +1,5 @@
 import logging
+from enum import Enum
 from typing import Annotated
 
 import sqlalchemy
@@ -14,6 +15,7 @@ from blogapi.models.post import (
     UserPost,
     UserPostIn,
     UserPostWithComments,
+    UserPostWithLikes,
 )
 from blogapi.models.user import User
 
@@ -57,11 +59,23 @@ async def create_post(
     return {"id": last_record_id, **data}
 
 
-@router.get("/post", response_model=list[UserPost])
-async def get_all_posts():
+class PostSorting(str, Enum):
+    new = "new"
+    old = "old"
+    most_likes = "most_likes"
+
+
+@router.get("/post", response_model=list[UserPostWithLikes])
+async def get_all_posts(sorting: PostSorting = PostSorting.new):
     logger.info("Getting all posts")
 
-    query = post_table.select()
+    match sorting:
+        case PostSorting.new:
+            query = select_post_and_likes.order_by(post_table.c.id.desc())
+        case PostSorting.old:
+            query = select_post_and_likes.order_by(post_table.c.id.asc())
+        case PostSorting.most_likes:
+            query = select_post_and_likes.order_by(sqlalchemy.desc("likes"))
 
     logger.debug(query)
 

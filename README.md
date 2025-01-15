@@ -69,6 +69,7 @@ pip install -r requirements-dev.txt
 
 ```bash
     pytest
+    pytest -k <test_name>
     pytest --fixtures
     pytest --fixtures-per-test
 ```
