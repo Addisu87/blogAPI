@@ -31,6 +31,14 @@ comment_table = Table(
     Column("post_id", ForeignKey("posts.id"), nullable=False),
 )
 
+like_table = Table(
+    "likes",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("user_id", ForeignKey("users.id"), nullable=False),
+    Column("post_id", ForeignKey("posts.id"), nullable=False),
+)
+
 
 engine = sqlalchemy.create_engine(config.DATABASE_URL)
 
