@@ -54,7 +54,7 @@ async def created_comment(
 
 @pytest.mark.anyio
 async def test_create_post(
-    async_client: AsyncClient, registered_user: dict, logged_in_token: str
+    async_client: AsyncClient, confirmed_user: dict, logged_in_token: str
 ):
     body = "Test Post"
 
@@ -68,16 +68,16 @@ async def test_create_post(
     assert {
         "id": 1,
         "body": body,
-        "user_id": registered_user["id"],
+        "user_id": confirmed_user["id"],
     }.items() <= response.json().items()
 
 
 @pytest.mark.anyio
 async def test_create_post_expired_token(
-    async_client: AsyncClient, registered_user: dict, mocker
+    async_client: AsyncClient, confirmed_user: dict, mocker
 ):
     mocker.patch("blogapi.core.security.access_token_expire_minutes", return_value=-1)
-    token = create_access_token(registered_user["email"])
+    token = create_access_token(confirmed_user["email"])
     response = await async_client.post(
         "/post",
         json={"body": "Test Post"},
@@ -175,7 +175,7 @@ async def test_get_all_posts_wrong_sorting(async_client: AsyncClient):
 async def test_create_comment(
     async_client: AsyncClient,
     created_post: dict,
-    registered_user: dict,
+    confirmed_user: dict,
     logged_in_token: str,
 ):
     body = "Test comment"
@@ -183,9 +183,8 @@ async def test_create_comment(
     response = await async_client.post(
         "/comment",
         json={
-            "post_id": created_post["id"],
             "body": body,
-            "user_id": registered_user["id"],
+            "post_id": created_post["id"],
         },
         headers={"Authorization": f"Bearer {logged_in_token}"},
     )
@@ -195,6 +194,7 @@ async def test_create_comment(
         "id": 1,
         "post_id": created_post["id"],
         "body": body,
+        "user_id": confirmed_user["id"],
     }.items() <= response.json().items()
 
 
