@@ -43,6 +43,11 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         email = payload.get("sub")
         if email is None:
             raise credentials_exception
+
+        type = payload.get("type")
+        if type is None or type != "access":
+            raise credentials_exception
+
     except ExpiredSignatureError as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
