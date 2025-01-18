@@ -1,6 +1,6 @@
 import databases
 import sqlalchemy
-from sqlalchemy import Column, ForeignKey, Integer, MetaData, String, Table
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, MetaData, String, Table
 
 from blogapi.core.config import config
 
@@ -12,6 +12,7 @@ user_table = Table(
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("email", String, unique=True, nullable=False),
     Column("password", String, nullable=False),
+    Column("confirmation", Boolean, default=False),
 )
 
 post_table = Table(
