@@ -12,9 +12,6 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 SECRET_KEY: str = secrets.token_urlsafe(32)
 ALGORITHM = "HS256"
-# 60 minutes * 24 hours * 7 days = 7 days
-# ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7
-# ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
@@ -23,7 +20,7 @@ def access_token_expire_minutes() -> int:
 
 
 def confirm_token_expire_minutes() -> int:
-    return 1440
+    return 60 * 24
 
 
 # Create access token

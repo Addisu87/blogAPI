@@ -12,7 +12,7 @@ user_table = Table(
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("email", String, unique=True, nullable=False),
     Column("password", String, nullable=False),
-    Column("confirmation", Boolean, default=False),
+    Column("confirmed", Boolean, default=False),
 )
 
 post_table = Table(
