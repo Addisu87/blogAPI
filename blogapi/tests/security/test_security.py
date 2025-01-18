@@ -2,7 +2,12 @@ import pytest
 from fastapi import HTTPException
 from jose import jwt
 
-from blogapi.core.deps import authenticate_user, get_current_user, get_user
+from blogapi.core.deps import (
+    authenticate_user,
+    get_current_user,
+    get_subject_for_token_type,
+    get_user,
+)
 from blogapi.core.security import (
     ALGORITHM,
     SECRET_KEY,
@@ -37,6 +42,61 @@ def test_confirmation_access_token():
     assert {"sub": "123", "type": "confirmation"}.items() <= jwt.decode(
         token, key=SECRET_KEY, algorithms=[ALGORITHM]
     ).items()
+
+
+def test_get_subject_for_token_type_valid_access():
+    email = "test@example.com"
+    token = create_access_token(email)
+
+    assert email == get_subject_for_token_type(token, "access")
+
+
+def test_get_subject_for_token_type_valid_confirmation():
+    email = "test@example.com"
+    token = create_confirmation_token(email)
+
+    assert email == get_subject_for_token_type(token, "confirmation")
+
+
+def test_get_subject_for_token_type_expired(mocker):
+    mocker.patch("blogapi.core.security.access_token_expire_minutes", return_value=-1)
+    email = "test@example.com"
+    token = create_access_token(email)
+    with pytest.raises(HTTPException) as exc_info:
+        get_subject_for_token_type(token, "access")
+
+    assert "Token has expired" == exc_info.value.detail
+
+
+def test_get_subject_for_token_type_invalid_token():
+    token = "invalid token"
+    with pytest.raises(HTTPException) as exc_info:
+        get_subject_for_token_type(token, "access")
+
+    assert "Invalid token" == exc_info.value.detail
+
+
+def test_get_subject_for_token_type_missing_sub():
+    email = "text@example.com"
+    token = create_access_token(email)
+    payload = jwt.decode(token, key=SECRET_KEY, algorithms=[ALGORITHM])
+    del payload["sub"]
+
+    token = jwt.encode(payload, key=SECRET_KEY, algorithm=ALGORITHM)
+
+    with pytest.raises(HTTPException) as exc_info:
+        get_subject_for_token_type(token, "access")
+
+    assert "Token is missing 'sub' field" == exc_info.value.detail
+
+
+def test_get_subject_for_token_type_wrong_type():
+    email = "test@example.com"
+    token = create_confirmation_token(email)
+    with pytest.raises(HTTPException) as exc_info:
+        get_subject_for_token_type(token, "access")
+
+    assert "Token has incorrect type, expected 'access'" == exc_info.value.detail
 
 
 def test_get_password_hash():
