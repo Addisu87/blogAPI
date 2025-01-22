@@ -27,7 +27,6 @@ async def upload_file(file: UploadFile):
                 local_file=filename,
                 filename=file.filename,
             )
-
     except Exception:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
