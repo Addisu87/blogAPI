@@ -10,7 +10,7 @@ from blogapi.core.security import (
 )
 from blogapi.database.database import database, user_table
 from blogapi.models.user import UserIn
-from blogapi.service_tasks.tasks import send_user_registration_email
+from blogapi.service_tasks import tasks
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ async def register(user: UserIn, request: Request):
     logger.debug(query)
 
     await database.execute(query)
-    await send_user_registration_email(
+    await tasks.send_user_registration_email(
         user.email,
         confirmation_url=str(
             request.url_for(
