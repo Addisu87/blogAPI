@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Annotated
 
 import sqlalchemy
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
 
 from blogapi.core.deps import get_current_user
 from blogapi.database.database import comment_table, database, like_table, post_table
@@ -18,6 +18,7 @@ from blogapi.models.post import (
     UserPostWithLikes,
 )
 from blogapi.models.user import User
+from blogapi.service_tasks.tasks import generate_and_add_to_post
 
 router = APIRouter(tags=["Posts"])
 
@@ -46,7 +47,11 @@ async def find_post(post_id: int):
     status_code=status.HTTP_201_CREATED,
 )
 async def create_post(
-    post: UserPostIn, current_user: Annotated[User, Depends(get_current_user)]
+    post: UserPostIn,
+    current_user: Annotated[User, Depends(get_current_user)],
+    background_tasks: BackgroundTasks,
+    request: Request,
+    prompt: str = "",
 ):
     logger.info("Create post")
 
@@ -56,6 +61,17 @@ async def create_post(
     logger.debug(query)
 
     last_record_id = await database.execute(query)
+
+    if prompt:
+        background_tasks.add_task(
+            generate_and_add_to_post,
+            current_user.email,
+            last_record_id,
+            str(request.url_for("get_post_with_comments", post_id=last_record_id)),
+            database,
+            prompt,
+        )
+
     return {"id": last_record_id, **data}
 
 
@@ -140,7 +156,8 @@ async def get_post_with_comments(post_id: int):
 
 @router.post("/like", response_model=PostLike, status_code=201)
 async def like_post(
-    like: PostLikeIn, current_user: Annotated[User, Depends(get_current_user)]
+    like: PostLikeIn,
+    current_user: Annotated[User, Depends(get_current_user)],
 ):
     logger.info("Liking post")
 

@@ -17,13 +17,14 @@ class EmailObfuscationFilter(logging.Filter):
 
     def filter(self, record: logging.LogRecord) -> bool:
         if "email" in record.__dict__:
-            record.email == obfuscated(record.email, self.obfuscated_length)  # type: ignore
+            record.email = obfuscated(record.__dict__["email"], self.obfuscated_length)
         return True
 
 
-handlers = (["default", "rotating_file"],)
+# Define handlers based on environment
+handlers = ["default", "rotating_file"]
 if isinstance(config, DevConfig):
-    handlers = (["default", "rotating_file", "logtail"],)
+    handlers.append("logtail")
 
 
 def configure_logging() -> None:
@@ -44,13 +45,11 @@ def configure_logging() -> None:
                 },
             },
             "formatters": {
-                # Console-friendly logs with Rich
                 "console": {
                     "class": "logging.Formatter",
                     "datefmt": "%Y-%m-%dT%H:%M:%S",
                     "format": "(%(correlation_id)s) %(name)s:%(lineno)d - %(message)s",
                 },
-                # JSON formatter for structured logs
                 "file": {
                     "class": "pythonjsonlogger.jsonlogger.JsonFormatter",
                     "datefmt": "%Y-%m-%dT%H:%M:%S",
@@ -58,14 +57,12 @@ def configure_logging() -> None:
                 },
             },
             "handlers": {
-                # Console handler for development
                 "default": {
                     "class": "rich.logging.RichHandler",
                     "level": "DEBUG",
                     "formatter": "console",
                     "filters": ["correlation_id", "email_obfuscation"],
                 },
-                # Rotating file handler with JSON logging
                 "rotating_file": {
                     "class": "logging.handlers.RotatingFileHandler",
                     "level": "DEBUG",
@@ -85,18 +82,15 @@ def configure_logging() -> None:
                 },
             },
             "loggers": {
-                # Uvicorn logger
                 "uvicorn": {
                     "handlers": ["default", "rotating_file"],
                     "level": "INFO",
                 },
-                # Application logger
                 "blogapi": {
                     "handlers": handlers,
                     "level": "DEBUG" if isinstance(config, DevConfig) else "INFO",
                     "propagate": False,
                 },
-                # Reduce verbosity for SQL databases
                 "databases": {
                     "handlers": ["default"],
                     "level": "WARNING",
