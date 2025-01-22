@@ -10,6 +10,7 @@ class UserPost(UserPostIn):
 
     id: int
     user_id: int
+    image_url: str | None = None
 
 
 class UserPostWithLikes(UserPost):
