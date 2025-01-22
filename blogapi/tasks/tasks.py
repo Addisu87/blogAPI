@@ -20,7 +20,7 @@ async def send_simple_email(to: str, subject: str, body: str):
                 f"https://api.mailgun.net/v3/{config.MAILGUN_DOMAIN}/messages",
                 auth=("api", config.MAILGUN_API_KEY),
                 data={
-                    "from": f"Addisu haile <mailgun@{config.MAILGUN_DOMAIN}>",
+                    "from": f"Addisu Haile <mailgun@{config.MAILGUN_DOMAIN}>",
                     "to": [to],
                     "subject": subject,
                     "text": body,
@@ -37,3 +37,15 @@ async def send_simple_email(to: str, subject: str, body: str):
             raise APIResponseError(
                 f"API request failed with status code {err.response.status_code}"
             ) from err
+
+
+async def send_user_registration_email(email: str, confirmation_url: str):
+    return await send_simple_email(
+        email,
+        "Successfully signed up",
+        (
+            f"Hi {email}! You have successfully signed up to the Blog REST API."
+            "Please confirm your email by clicking on the"
+            f" following link: {confirmation_url}"
+        ),
+    )
