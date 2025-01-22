@@ -1,6 +1,6 @@
 import logging
 
-from fastapi import APIRouter, HTTPException, Request, status
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Request, status
 
 from blogapi.core.deps import authenticate_user, get_subject_for_token_type, get_user
 from blogapi.core.security import (
@@ -18,7 +18,7 @@ router = APIRouter(tags=["users"])
 
 
 @router.post("/register", status_code=201)
-async def register(user: UserIn, request: Request):
+async def register(user: UserIn, background_tasks: BackgroundTasks, request: Request):
     if await get_user(user.email):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -31,7 +31,9 @@ async def register(user: UserIn, request: Request):
     logger.debug(query)
 
     await database.execute(query)
-    await tasks.send_user_registration_email(
+
+    background_tasks.add_task(
+        tasks.send_user_registration_email,
         user.email,
         confirmation_url=str(
             request.url_for(
