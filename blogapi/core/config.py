@@ -15,6 +15,9 @@ class GlobalConfig(BaseConfig):
     LOGTAIL_API_KEY: str | None = None
     MAILGUN_API_KEY: str | None = None
     MAILGUN_DOMAIN: str | None = None
+    B2_KEY_ID: str | None = None
+    B2_APPLICATION_KEY: str | None = None
+    B2_BUCKET_NAME: str | None = None
 
 
 class DevConfig(GlobalConfig):
