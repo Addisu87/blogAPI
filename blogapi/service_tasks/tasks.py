@@ -34,10 +34,10 @@ async def send_simple_email(to: str, subject: str, body: str):
             response.raise_for_status()
 
             logger.debug(response.content)
-
             return response
 
         except httpx.HTTPStatusError as err:
+            logger.error(f"Error: {err}")
             raise APIResponseError(
                 f"API request failed with status code {err.response.status_code}"
             ) from err
@@ -53,6 +53,7 @@ async def send_user_registration_email(email: str, confirmation_url: str):
             f" following link: {confirmation_url}"
         ),
     )
+
 
 # Generate ai_image
 async def _generate_cute_creature_api(prompt: str):
