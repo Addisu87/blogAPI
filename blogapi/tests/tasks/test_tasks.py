@@ -1,7 +1,7 @@
 import httpx
 import pytest
 
-from blogapi.tasks.tasks import APIResponseError, send_simple_email
+from blogapi.service_tasks.tasks import APIResponseError, send_simple_email
 
 
 @pytest.mark.anyio

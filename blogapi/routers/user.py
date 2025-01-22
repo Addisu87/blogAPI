@@ -10,6 +10,7 @@ from blogapi.core.security import (
 )
 from blogapi.database.database import database, user_table
 from blogapi.models.user import UserIn
+from blogapi.service_tasks.tasks import send_user_registration_email
 
 logger = logging.getLogger(__name__)
 
@@ -30,13 +31,16 @@ async def register(user: UserIn, request: Request):
     logger.debug(query)
 
     await database.execute(query)
-
-    return {
-        "detail": "User Created. Please confirm your email.",
-        "confirmation_url": request.url_for(
-            "confirm_email", token=create_confirmation_token(user.email)
+    await send_user_registration_email(
+        user.email,
+        confirmation_url=str(
+            request.url_for(
+                "confirm_email", token=create_confirmation_token(user.email)
+            )
         ),
-    }
+    )
+
+    return {"detail": "User Created. Please confirm your email."}
 
 
 @router.post("/token")
