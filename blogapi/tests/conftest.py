@@ -10,6 +10,7 @@ os.environ["ENV_STATE"] = "test"
 
 from blogapi.database.database import database, metadata, user_table
 from blogapi.main import app
+from blogapi.tests.helpers import create_post
 
 
 @pytest.fixture(scope="session")
@@ -27,13 +28,12 @@ def client() -> Generator:
 
 @pytest.fixture(autouse=True)
 async def db() -> AsyncGenerator:
-    # Clear the database tables by truncating them, restarting identity, and cascading
     await database.connect()
     for table in reversed(metadata.sorted_tables):
         await database.execute(
             f'TRUNCATE TABLE "{table.name}" RESTART IDENTITY CASCADE;'
         )
-    yield
+    yield database
     await database.disconnect()
 
 
@@ -90,3 +90,8 @@ def mock_httpx_client(mocker):
     mocked_client.return_value.__aenter__.return_value = mocked_async_client
 
     return mocked_async_client
+
+
+@pytest.fixture()
+async def created_post(async_client: AsyncClient, logged_in_token: str):
+    return await create_post("Test Post", async_client, logged_in_token)
