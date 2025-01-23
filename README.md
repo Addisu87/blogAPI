@@ -59,7 +59,7 @@ pip install --upgrade -r requirements.txt
 
 ```bash
     uvicorn blogapi.main:app --reload
-    uvcorn blogapi.main:app --host 0.0.0.0 --port $PORT
+    uvicorn blogapi.main:app --host 0.0.0.0 --port $PORT
 ```
 
 - The API will be live and ready to handle requests at http://127.0.0.1:8000.
