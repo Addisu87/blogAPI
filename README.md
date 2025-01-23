@@ -46,6 +46,13 @@ pip install -r requirements-dev.txt
     python3 -m pip install -e . --no-deps
 ```
 
+<!--  Upgrade requirements -->
+
+```bash
+pip install --upgrade -r requirements.txt
+
+```
+
 <!-- Run Your Application -->
 
 ```bash
@@ -80,11 +87,9 @@ pip install -r requirements-dev.txt
 
 ```
 
-<!--  -->
-
-```bash
-
-```
-
-- Mailgun
-- 
+- Mailgun - Email sending platform
+- DeepAI - Crate ai-images
+- Backblaze/b2sdk - B2 cloud storage
+- Logtail - logs for debugging and info
+- Aifiles - file support for asyncio
+-
