@@ -41,7 +41,7 @@ like_table = Table(
     Column("post_id", ForeignKey("posts.id"), nullable=False),
 )
 
-
+connect_args = {"check_same_thread": False} if "sqlite" in config.DATABASE_URL else {}
 engine = sqlalchemy.create_engine(config.DATABASE_URL)
 
 metadata.drop_all(engine)
