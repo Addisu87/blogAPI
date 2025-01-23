@@ -17,21 +17,14 @@ BlogAPI is a modern, feature-rich backend API for a blogging platform built usin
 
 1. Environment Setup
 
-<!-- set the Python version locally -->
+- set the Python version locally
 
 ```bash
 pyenv local 3.11
 
 ```
 
-<!-- Check python version  -->
-
-```bash
-pyenv exec python -v
-
-```
-
-<!--  create and activate a virtual environment: -->
+- create and activate a virtual environment:
 
 ```bash
 pyenv exec python -m venv .venv
@@ -48,14 +41,14 @@ pip install -r requirements-dev.txt  # Development dependencies
 
 ```
 
-<!-- To set up development mode: -->
+- To set up development mode:
 
 ```bash
     python3 -m pip install -e .
     python3 -m pip install -e . --no-deps
 ```
 
-<!--  Upgrade requirements -->
+- Upgrade requirements:
 
 ```bash
 pip install --upgrade -r requirements.txt
@@ -72,20 +65,20 @@ pip install --upgrade -r requirements.txt
 
 ### Development and Testing
 
-<!-- Install and activate the dev environment: -->
+- Install and activate the dev environment:
 
 ```bash
     hatch env create dev
     hatch shell dev
 ```
 
- <!-- Verify Installation -->
+- Verify Installation
 
 ```bash
     pip freeze
 ```
 
-<!-- To run test -->
+- To run test
 
 ```bash
     pytest
