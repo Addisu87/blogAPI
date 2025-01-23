@@ -52,6 +52,7 @@ pip install -r requirements-dev.txt  # Development dependencies
 
 ```bash
 pip install --upgrade -r requirements.txt
+pip install --upgrade -r requirements-dev.txt
 
 ```
 
