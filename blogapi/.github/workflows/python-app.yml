@@ -40,7 +40,7 @@ jobs:
       # Step 5: Lint with Ruff
       - name: Lint with ruff
         run: |
-          ruff check --fix
+          ruff check --statistics
 
       # Step 6: Run Tests with Pytest
       - name: Test with pytest

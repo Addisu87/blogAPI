@@ -33,7 +33,7 @@ class ProdConfig(GlobalConfig):
 class TestConfig(GlobalConfig):
     model_config = SettingsConfigDict(env_prefix="TEST_", extra="ignore")
 
-    DATABASE_URL: str | None = None
+    DATABASE_URL: str = "postgresql://blog:blogapi87@localhost/testdb"
     DB_FORCE_ROLL_BACK: bool = True
 
 
