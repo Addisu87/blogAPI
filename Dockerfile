@@ -38,4 +38,4 @@ COPY wait-for.sh /wait-for.sh
 RUN chmod +x /wait-for.sh
 
 # Start the app (wait for Postgres first)
-CMD ["/wait-for.sh", "db:5432", "--", "uvicorn", "blogapi.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["/wait-for.sh", "db", "--", "uvicorn", "blogapi.main:app", "--host", "0.0.0.0", "--port", "8000"]
