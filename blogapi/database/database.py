@@ -1,6 +1,7 @@
 import databases
 import sqlalchemy
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, MetaData, String, Table
+import os
 
 from blogapi.core.config import config
 
@@ -41,13 +42,20 @@ like_table = Table(
     Column("post_id", ForeignKey("posts.id"), nullable=False),
 )
 
+
+# Override DATABASE_URL with direct env variable if provided (for Render)
+config.DATABASE_URL = os.getenv("DATABASE_URL", config.DATABASE_URL)
+
 connect_args = {"check_same_thread": False} if "sqlite" in config.DATABASE_URL else {}
 engine = sqlalchemy.create_engine(config.DATABASE_URL)
 
-metadata.drop_all(engine)
-metadata.create_all(engine)
+# Drop & create tables **only in dev or test**
+if config.ENV_STATE in ("dev", "test"):
+    metadata.drop_all(engine)
+    metadata.create_all(engine)
 
 db_args = {"min_size": 1, "max_size": 4} if "postgres" in config.DATABASE_URL else {}
 database = databases.Database(
     config.DATABASE_URL, force_rollback=config.DB_FORCE_ROLL_BACK, **db_args
 )
+
