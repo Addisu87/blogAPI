@@ -5,7 +5,7 @@ services:
     build:
       context: .
       args:
-        ENV_STATE: prod 
+        ENV_STATE: prod
     container_name: blogapi_web
     restart: unless-stopped
     env_file:
@@ -15,7 +15,7 @@ services:
     depends_on:
       - db
     volumes:
-      - .:/app  # Only use for dev
+      - .:/app
 
   db:
     image: postgres:17
