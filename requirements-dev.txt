@@ -1,5 +1,4 @@
 pytest
-httpx
 pytest-mock
 pyfakefs
 ruff

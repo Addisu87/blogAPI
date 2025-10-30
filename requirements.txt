@@ -17,3 +17,4 @@ python-multipart
 aiofiles
 b2sdk
 sentry-sdk[fastapi]
+httpx
